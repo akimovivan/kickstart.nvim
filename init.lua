@@ -729,7 +729,7 @@ require('lazy').setup({
           ['<C-p>'] = cmp.mapping.select_prev_item(),
 
           -- Scroll the documentation window [b]ack / [f]orward
-          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+          ['<C-v>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
 
           -- Accept ([y]es) the completion.
@@ -932,3 +932,10 @@ vim.keymap.set('n', '<leader>uc', '<cmd>Telescope colorscheme<CR>', { desc = 'Se
 
 vim.opt.termguicolors = true
 require('bufferline').setup {}
+
+vim.keymap.set('n', '<leader>bd', '<cmd>bd!<CR>', { desc = 'Close buffer' })
+vim.keymap.set('n', '<leader>bl', '<cmd>bn<CR>', { desc = 'Next buffer' })
+vim.keymap.set('n', '<leader>bh', '<cmd>bp<CR>', { desc = 'previous buffer' })
+vim.keymap.set('n', 'L', '<cmd>bn<CR>', { desc = 'Next buffer' })
+vim.keymap.set('n', 'H', '<cmd>bp<CR>', { desc = 'previous buffer' })
+vim.o.colorcolumn = '80'
