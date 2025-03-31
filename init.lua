@@ -939,3 +939,5 @@ vim.keymap.set('n', '<leader>bh', '<cmd>bp<CR>', { desc = 'previous buffer' })
 vim.keymap.set('n', 'L', '<cmd>bn<CR>', { desc = 'Next buffer' })
 vim.keymap.set('n', 'H', '<cmd>bp<CR>', { desc = 'previous buffer' })
 vim.o.colorcolumn = '80'
+
+vim.keymap.set('n', '<leader>`', '<cmd>b#<CR>', { desc = 'go to last buffer' })
