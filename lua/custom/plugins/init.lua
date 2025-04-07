@@ -23,4 +23,6 @@ return {
       { '<leader>gg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
     },
   },
+
+  { 'wakatime/vim-wakatime', lazy = false },
 }

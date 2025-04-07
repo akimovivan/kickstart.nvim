@@ -941,3 +941,13 @@ vim.keymap.set('n', 'H', '<cmd>bp<CR>', { desc = 'previous buffer' })
 vim.o.colorcolumn = '80'
 
 vim.keymap.set('n', '<leader>`', '<cmd>b#<CR>', { desc = 'go to last buffer' })
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'go',
+  callback = function()
+    vim.opt_local.tabstop = 2
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.softtabstop = 2
+    vim.opt_local.expandtab = true
+  end,
+})
