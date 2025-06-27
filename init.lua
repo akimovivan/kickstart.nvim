@@ -490,16 +490,9 @@ require('lazy').setup({
         },
         gopls = {},
         pyright = {},
-        -- rust_analyzer = {},
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
-        --
-
+        buf_ls = {
+          filetypes = { 'proto' },
+        },
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -872,5 +865,15 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
   pattern = '*.proto',
   callback = function()
     vim.bo.filetype = 'proto'
+  end,
+})
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client.name == 'clangd' and vim.bo[args.buf].filetype == 'proto' then
+      client.stop() -- Forcefully detach clangd
+      vim.notify('Blocked clangd from attaching to .proto file', vim.log.levels.WARN)
+    end
   end,
 })
