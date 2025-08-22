@@ -585,6 +585,39 @@ require('lazy').setup({
         clangd = {
           filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }, -- exclude "proto".
         },
+        eslint = {
+          filetypes = { 'javascript', 'typescript' },
+        },
+
+        vue_ls = {
+          filetypes = { 'vue', 'typescript', 'javascript' },
+          settings = {
+            -- Enable Vue inlay hints and other features
+            vue = {
+              inlayHints = {
+                -- Enable different inlay hint options as needed
+                destructuredProps = { enabled = true },
+                inlineHandlerLoading = { enabled = true },
+                missingProps = { enabled = true },
+                optionsWrapper = { enabled = true },
+                vBindShorthand = { enabled = true },
+              },
+            },
+          },
+        },
+
+        vtsls = {
+          filetypes = { 'vue' },
+          init_options = {
+            plugins = {
+              {
+                name = '@vue/typescript-plugin',
+                location = vim.fn.stdpath 'data' .. '/mason/packages/vue-language-server/node_modules/@vue/language-server',
+                languages = { 'vue' },
+              },
+            },
+          },
+        },
         gopls = {},
         pyright = {},
         buf_ls = {
@@ -622,6 +655,8 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'vue-language-server',
+        'vtsls',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -674,11 +709,14 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        vue = { 'prettier' },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        python = { 'ruff' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
       },
     },
   },
@@ -800,7 +838,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'tokyonight-storm'
     end,
   },
 
@@ -960,12 +998,40 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
   end,
 })
 
-vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(args)
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    if client.name == 'clangd' and vim.bo[args.buf].filetype == 'proto' then
-      client.stop() -- Forcefully detach clangd
-      vim.notify('Blocked clangd from attaching to .proto file', vim.log.levels.WARN)
-    end
-  end,
+-- vim.api.nvim_create_autocmd('LspAttach', {
+--   callback = function(args)
+--     local client = vim.lsp.get_client_by_id(args.data.client_id)
+--     if client.name == 'clangd' and vim.bo[args.buf].filetype == 'proto' then
+--       client.stop() -- Forcefully detach clangd
+--       vim.notify('Blocked clangd from attaching to .proto file', vim.log.levels.WARN)
+--     end
+--   end,
+-- })
+--
+vim.lsp.config('eslint', {
+  filetypes = { 'javascript', 'typescript', 'vue' },
+})
+
+vim.lsp.config('buf_ls', {
+  filetypes = { 'proto' },
+})
+
+vim.lsp.config('ts_ls', {
+  init_options = {
+    plugins = {
+      {
+        name = '@vue/typescript-plugin',
+        location = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server',
+        languages = { 'vue' },
+        configNamespace = 'typescript',
+      },
+    },
+  },
+  filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+})
+
+vim.lsp.config('vue_ls', {})
+
+vim.lsp.config('clangd', {
+  filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }, -- exclude "proto".
 })
