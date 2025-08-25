@@ -1032,6 +1032,19 @@ vim.lsp.config('ts_ls', {
 
 vim.lsp.config('vue_ls', {})
 
+vim.lsp.config('vacuum', {})
 vim.lsp.config('clangd', {
   filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }, -- exclude "proto".
+})
+
+vim.keymap.set('n', '=', [[<cmd>vertical resize +5<cr>]]) -- make the window biger vertically
+vim.keymap.set('n', '-', [[<cmd>vertical resize -5<cr>]]) -- make the window smaller vertically
+vim.keymap.set('n', '+', [[<cmd>horizontal resize +2<cr>]]) -- make the window bigger horizontally by pressing shift and =
+vim.keymap.set('n', '_', [[<cmd>horizontal resize -2<cr>]]) -- make the window smaller horizontally by pressing shift and -
+
+vim.api.nvim_create_autocmd('BufRead', {
+  pattern = { '*.openapi.yaml', 'openapi*.yaml', 'api.yaml', 'swagger.yaml' },
+  callback = function()
+    vim.bo.filetype = 'yaml.openapi'
+  end,
 })
