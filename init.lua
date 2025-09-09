@@ -969,6 +969,8 @@ vim.keymap.set('n', '<leader>l', '<cmd>vert split<CR>', { desc = 'Split vertical
 vim.keymap.set('n', '<leader>e', '<cmd>Neotree toggle<CR>', { desc = 'Neotree' })
 vim.keymap.set('n', '<leader>uc', '<cmd>Telescope colorscheme<CR>', { desc = 'Select colorscheme ' })
 
+vim.keymap.set('n', '<leader>st', '<cmd>TodoTelescope<CR>', { desc = '[S]earch [T]odos' })
+
 vim.opt.termguicolors = true
 require('bufferline').setup {}
 
@@ -998,16 +1000,6 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
   end,
 })
 
--- vim.api.nvim_create_autocmd('LspAttach', {
---   callback = function(args)
---     local client = vim.lsp.get_client_by_id(args.data.client_id)
---     if client.name == 'clangd' and vim.bo[args.buf].filetype == 'proto' then
---       client.stop() -- Forcefully detach clangd
---       vim.notify('Blocked clangd from attaching to .proto file', vim.log.levels.WARN)
---     end
---   end,
--- })
---
 vim.lsp.config('eslint', {
   filetypes = { 'javascript', 'typescript', 'vue' },
 })
