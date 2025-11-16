@@ -711,9 +711,11 @@ require('lazy').setup({
         lua = { 'stylua' },
         vue = { 'prettier' },
         html = { 'prettier' },
+        json = { 'prettier' },
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
         typescript = { 'prettierd', 'prettier', stop_after_first = true },
         python = { 'black' },
+        c = { 'clang-format' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -833,7 +835,7 @@ require('lazy').setup({
       require('tokyonight').setup {
         transparent = true,
         styles = {
-          comments = { italic = false }, -- Disable italics in comments
+          comments = { italic = true }, -- Disable italics in comments
           sidebars = 'transparent',
           floats = 'transparent',
         },
@@ -988,7 +990,7 @@ vim.o.colorcolumn = '80'
 vim.keymap.set('n', '<leader>`', '<cmd>b#<CR>', { desc = 'go to last buffer' })
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'go',
+  pattern = { 'go', 'html', 'css', 'javascript', 'c', 'haskell' },
   callback = function()
     vim.opt_local.tabstop = 2
     vim.opt_local.shiftwidth = 2
@@ -996,6 +998,16 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.opt_local.expandtab = true
   end,
 })
+
+-- vim.api.nvim_create_autocmd('FileType', {
+--   pattern = 'javascript',
+--   callback = function()
+--     vim.opt_local.tabstop = 4
+--     vim.opt_local.shiftwidth = 4
+--     vim.opt_local.softtabstop = 4
+--     vim.opt_local.expandtab = true
+--   end,
+-- })
 
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
   pattern = '*.proto',
@@ -1023,7 +1035,8 @@ vim.lsp.config('ts_ls', {
       },
     },
   },
-  filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+  -- filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+  filetypes = { 'javascriptreact', 'typescriptreact', 'vue' }, -- not sure this works with vue
 })
 
 vim.lsp.config('vue_ls', {})
@@ -1038,9 +1051,30 @@ vim.keymap.set('n', '-', [[<cmd>vertical resize -5<cr>]]) -- make the window sma
 vim.keymap.set('n', '+', [[<cmd>horizontal resize +2<cr>]]) -- make the window bigger horizontally by pressing shift and =
 vim.keymap.set('n', '_', [[<cmd>horizontal resize -2<cr>]]) -- make the window smaller horizontally by pressing shift and -
 
+-- Neorg stuff
+vim.keymap.set('n', '<leader>n', '', { desc = 'Neorg' })
+vim.keymap.set('n', '<leader>nc', '<cmd>Neorg<CR>', { desc = 'Open Neorg menu' })
+vim.keymap.set('n', '<leader>ni', '<cmd>Neorg index<CR>', { desc = 'Go to neorg index' })
+
+-- required to attach buf lsp to openapi spec
 vim.api.nvim_create_autocmd('BufRead', {
   pattern = { '*.openapi.yaml', 'openapi*.yaml', 'api.yaml', 'swagger.yaml' },
   callback = function()
     vim.bo.filetype = 'yaml.openapi'
   end,
 })
+
+vim.opt.keymap = 'russian-jcukenwin'
+vim.opt.iminsert = 0
+vim.opt.imsearch = 0
+
+-- Map Ctrl-L to toggle language in Insert mode
+vim.keymap.set('i', '<C-l>', '<C-^>', { noremap = true, desc = 'Switch Input Language' })
+
+-- Function for statusline integration
+local function input_lang_status()
+  return vim.o.iminsert == 1 and '[RU]' or '[EN]'
+end
+
+vim.keymap.set('n', '<leader>u', '', { desc = 'UI' })
+vim.keymap.set('n', '<leader>uz', '<cmd>ZenMode<CR>', { desc = 'UI' })
