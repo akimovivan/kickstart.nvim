@@ -29,7 +29,7 @@ return {
     priority = 1000,
     opts = {},
   },
-  { 'wakatime/vim-wakatime', lazy = false },
+  -- { 'wakatime/vim-wakatime', lazy = false },
   {
     'projekt0n/github-nvim-theme',
     name = 'github-theme',
