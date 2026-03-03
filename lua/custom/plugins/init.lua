@@ -73,3 +73,5 @@ return {
     opts = {},
   },
 }
+---@module 'lazy'
+---@type LazySpec
