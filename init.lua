@@ -521,35 +521,6 @@ require('lazy').setup({
           filetypes = { 'javascript', 'typescript' },
         },
 
-        vue_ls = {
-          filetypes = { 'vue', 'typescript', 'javascript' },
-          settings = {
-            -- Enable Vue inlay hints and other features
-            vue = {
-              inlayHints = {
-                -- Enable different inlay hint options as needed
-                destructuredProps = { enabled = true },
-                inlineHandlerLoading = { enabled = true },
-                missingProps = { enabled = true },
-                optionsWrapper = { enabled = true },
-                vBindShorthand = { enabled = true },
-              },
-            },
-          },
-        },
-
-        vtsls = {
-          filetypes = { 'vue' },
-          init_options = {
-            plugins = {
-              {
-                name = '@vue/typescript-plugin',
-                location = vim.fn.stdpath 'data' .. '/mason/packages/vue-language-server/node_modules/@vue/language-server',
-                languages = { 'vue' },
-              },
-            },
-          },
-        },
         gopls = {},
         pyright = {},
         buf_ls = {
@@ -607,7 +578,7 @@ require('lazy').setup({
       -- You can press `g?` for help in this menu.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'stylua',
         'vue-language-server',
         'vtsls',
       })
@@ -963,9 +934,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
   pattern = '*.proto',
-  callback = function()
-    vim.bo.filetype = 'proto'
-  end,
+  callback = function() vim.bo.filetype = 'proto' end,
 })
 
 vim.lsp.config('eslint', {
@@ -1011,9 +980,7 @@ vim.keymap.set('n', '<leader>ni', '<cmd>Neorg index<CR>', { desc = 'Go to neorg 
 -- required to attach buf lsp to openapi spec
 vim.api.nvim_create_autocmd('BufRead', {
   pattern = { '*.openapi.yaml', 'openapi*.yaml', 'api.yaml', 'swagger.yaml' },
-  callback = function()
-    vim.bo.filetype = 'yaml.openapi'
-  end,
+  callback = function() vim.bo.filetype = 'yaml.openapi' end,
 })
 
 vim.opt.keymap = 'russian-jcukenwin'
@@ -1024,9 +991,7 @@ vim.opt.imsearch = 0
 vim.keymap.set('i', '<C-l>', '<C-^>', { noremap = true, desc = 'Switch Input Language' })
 
 -- Function for statusline integration
-local function input_lang_status()
-  return vim.o.iminsert == 1 and '[RU]' or '[EN]'
-end
+local function input_lang_status() return vim.o.iminsert == 1 and '[RU]' or '[EN]' end
 
 vim.keymap.set('n', '<leader>u', '', { desc = 'UI' })
 vim.keymap.set('n', '<leader>uz', '<cmd>ZenMode<CR>', { desc = 'UI' })
